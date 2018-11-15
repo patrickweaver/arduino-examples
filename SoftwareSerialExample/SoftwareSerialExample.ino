@@ -1,5 +1,11 @@
 // https://www.arduino.cc/en/Tutorial/SoftwareSerialExample
 
+/* 
+ *  Tested on two Arduino Unos, they must be wired with common ground
+ *  When one of the Arduinos is programmed with a Raspberry Pi there is an extra
+ *  '⸮' character preceeding the received transmission.
+ */
+
 
 /*
   Software serial multple serial test
@@ -30,21 +36,24 @@
  */
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(2, 4); // RX, TX
 
 void setup() {
   // Open serial communications and wait for port to open:
-  Serial.begin(57600);
+  Serial.begin(9600);
+  Serial.flush();
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
 
-  Serial.println("Goodnight moon!");
+  Serial.println("Local: BLUE");
 
   // set the data rate for the SoftwareSerial port
-  mySerial.begin(4800);
-  mySerial.println("Hello, world?");
+  mySerial.begin(9600);
+  mySerial.flush();
+  delay(100);
+  mySerial.println("Blue to Black");
 }
 
 void loop() { // run over and over
