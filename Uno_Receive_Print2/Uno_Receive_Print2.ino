@@ -80,6 +80,8 @@ void setup() {
 
 void loop() { // run over and over
   if (cSerial.available()) {
+    //delay(100);
+    Serial.println(cSerial.available());
     Serial.write(cSerial.read());
     /*
     delay(100);
