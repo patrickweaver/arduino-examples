@@ -5,7 +5,7 @@
 #define TO_PRINT_TX_PIN 6 // Arduino transmit  YELLOW WIRE  labeled RX on printer
 #define TO_PRINT_RX_PIN 5 // Arduino receive   GREEN WIRE   labeled TX on printer
 
-SoftwareSerial mySerial(2, 4); // RX, TX
+SoftwareSerial cSerial(2, 4); // RX, TX
 SoftwareSerial pSerial(TO_PRINT_RX_PIN, TO_PRINT_TX_PIN);
 Adafruit_Thermal printer(&pSerial);
 
@@ -18,22 +18,29 @@ void setup() {
   }
 
   delay(100);
-  Serial.println("Local: BLUE");
+  Serial.println("Local: Elegoo");
 
   // set the data rate for the SoftwareSerial port
-  mySerial.begin(9600);
-  mySerial.flush();
+  cSerial.begin(9600);
+  cSerial.flush();
   delay(100);
-  mySerial.println("Blue to Black");
+  cSerial.println("Elegoo to Feather");
 
   
   //delay(100);
   printer.begin();
+  pSerial.begin(19200);
+  delay(100);
+  printer.println("a");
+  printer.feed(4);
+  Serial.println("Setup Done");
 }
 
 void loop() { // run over and over
-  if (mySerial.available()) {
-    int a = mySerial.read();
+  int a;
+  if (cSerial.available()) {
+    a = cSerial.read();
+    Serial.println(a);
     pSerial.begin(19200);
     delay(100);
     printer.println(a);
@@ -41,6 +48,10 @@ void loop() { // run over and over
     Serial.write(a);
   }
   if (Serial.available()) {
-    mySerial.write(Serial.read());
+    cSerial.write(Serial.read());
+    pSerial.begin(19200);
+    delay(100);
+    printer.println(a);
+    printer.feed(4);
   }
 }

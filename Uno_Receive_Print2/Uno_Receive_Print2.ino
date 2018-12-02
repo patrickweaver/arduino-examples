@@ -36,8 +36,14 @@
  */
 #include <SoftwareSerial.h>
 
-SoftwareSerial cSerial(12, 13); // RX, TX
+#include "Adafruit_Thermal.h"
 
+#define TO_PRINT_TX_PIN 6 // Arduino transmit  YELLOW WIRE  labeled RX on printer
+#define TO_PRINT_RX_PIN 5 // Arduino receive   GREEN WIRE   labeled TX on printer
+
+SoftwareSerial cSerial(4, 2); // RX, TX
+SoftwareSerial pSerial(TO_PRINT_RX_PIN, TO_PRINT_TX_PIN);
+Adafruit_Thermal printer(&pSerial);
 
 void setup() {
   // Open serial communications and wait for port to open:
@@ -48,22 +54,48 @@ void setup() {
   }
 
   delay(100);
-  Serial.println("Local: Feather");
+  Serial.println("Local: Elegoo");
 
   // set the data rate for the SoftwareSerial port
   cSerial.begin(9600);
   cSerial.flush();
   delay(100);
-  cSerial.println("Feather to Elegoo");
-  cSerial.println("abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890");
+  cSerial.println("Elegoo to Feather");
+
   
+  delay(100);
+  printer.begin();
+
+  /*
+  pSerial.begin(19200);
+
+  delay(100);
+  printer.println("end Setup");
+  printer.feed(2);
+  pSerial.end();
+  cSerial.begin(9600);
+  Serial.println("Setup Done");
+  */ 
 }
 
 void loop() { // run over and over
   if (cSerial.available()) {
     Serial.write(cSerial.read());
+    /*
+    delay(100);
+    int b = cSerial.available();
+    Serial.print("Bytes: ");
+    Serial.println(b);
+    Serial.println(cSerial.read());
+    Serial.println("");
+    pSerial.begin(19200);
+    printer.println(cSerial.read());
+    pSerial.end();
+    cSerial.begin(9600);
+    */
   }
   if (Serial.available()) {
     cSerial.write(Serial.read());
+    //printer.println(Serial.read());
   }
 }
